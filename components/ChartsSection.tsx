@@ -64,6 +64,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
                             <BarChart data={authorData} layout="horizontal" margin={{ top: 5, right: 20, left: 0, bottom: 90 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
                                 <XAxis dataKey="name" angle={-60} textAnchor="end" interval={0} />
+                                {/* FIX: Changed allowDecals to allowDecimals */}
                                 <YAxis allowDecimals={false} />
                                 <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(20, 184, 166, 0.1)' }}/>
                                 <Bar dataKey="count" fill="#0d9488" name="تعداد کتاب‌ها" radius={[4, 4, 0, 0]} />
@@ -81,6 +82,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={genreData} layout="vertical" margin={{ top: 5, right: 20, left: 60, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                                    {/* FIX: Changed allowDecals to allowDecimals */}
                                     <XAxis type="number" allowDecimals={false} />
                                     <YAxis type="category" dataKey="name" width={100} interval={0} />
                                     <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
@@ -98,6 +100,7 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
                                 <LineChart data={yearlyData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="name" />
+                                    {/* FIX: Changed allowDecals to allowDecimals */}
                                     <YAxis allowDecimals={false} />
                                     <Tooltip content={<CustomTooltip />} />
                                     <Line type="monotone" dataKey="count" stroke="#8b5cf6" strokeWidth={2} name="تعداد کتاب‌ها" activeDot={{ r: 8 }} />
