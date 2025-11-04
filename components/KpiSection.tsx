@@ -1,7 +1,7 @@
 
 import React from 'react';
-import type { KpiData } from '../types';
-import KpiCard from './KpiCard';
+import type { KpiData } from '../types.ts';
+import KpiCard from './KpiCard.tsx';
 
 interface KpiSectionProps {
     data: KpiData;

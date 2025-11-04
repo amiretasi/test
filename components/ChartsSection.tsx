@@ -1,8 +1,8 @@
 
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
-import type { ProcessedBook } from '../types';
-import RevealOnScroll from './RevealOnScroll';
+import type { ProcessedBook } from '../types.ts';
+import RevealOnScroll from './RevealOnScroll.tsx';
 
 interface ChartsSectionProps {
     books: ProcessedBook[];

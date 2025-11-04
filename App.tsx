@@ -1,17 +1,18 @@
+
 import React, { useMemo, useState } from 'react';
-import { booksData } from './constants';
-import type { ProcessedBook } from './types';
-import Header from './components/Header';
-import PageHeader from './components/PageHeader';
-import KpiSection from './components/KpiSection';
-import FullBookList from './components/FullBookList';
-import ChartsSection from './components/ChartsSection';
-import AuthorAccordionList from './components/AuthorAccordionList';
-import GenreAccordionList from './components/GenreAccordionList';
-import Timeline from './components/Timeline';
-import Footer from './components/Footer';
-import ScrollButton from './components/ScrollButton';
-import Intro from './components/Intro';
+import { booksData } from './constants.ts';
+import type { ProcessedBook } from './types.ts';
+import Header from './components/Header.tsx';
+import PageHeader from './components/PageHeader.tsx';
+import KpiSection from './components/KpiSection.tsx';
+import FullBookList from './components/FullBookList.tsx';
+import ChartsSection from './components/ChartsSection.tsx';
+import AuthorAccordionList from './components/AuthorAccordionList.tsx';
+import GenreAccordionList from './components/GenreAccordionList.tsx';
+import Timeline from './components/Timeline.tsx';
+import Footer from './components/Footer.tsx';
+import ScrollButton from './components/ScrollButton.tsx';
+import Intro from './components/Intro.tsx';
 
 function parseReadDate(dateStr: string | null | undefined) {
     if (!dateStr || typeof dateStr !== 'string') {

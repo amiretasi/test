@@ -1,7 +1,8 @@
+
 import React, { useMemo } from 'react';
-import type { ProcessedBook } from '../types';
-import Accordion from './Accordion';
-import RevealOnScroll from './RevealOnScroll';
+import type { ProcessedBook } from '../types.ts';
+import Accordion from './Accordion.tsx';
+import RevealOnScroll from './RevealOnScroll.tsx';
 
 interface GenreAccordionListProps {
     books: ProcessedBook[];

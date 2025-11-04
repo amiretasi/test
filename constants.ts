@@ -1,5 +1,5 @@
 
-import type { Book } from './types';
+import type { Book } from './types.ts';
 
 export const booksData: Book[] = [
     // شریعتی

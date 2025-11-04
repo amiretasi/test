@@ -1,8 +1,8 @@
 
 import React, { useMemo } from 'react';
-import type { ProcessedBook } from '../types';
-import { JALALI_MONTHS } from '../constants';
-import RevealOnScroll from './RevealOnScroll';
+import type { ProcessedBook } from '../types.ts';
+import { JALALI_MONTHS } from '../constants.ts';
+import RevealOnScroll from './RevealOnScroll.tsx';
 
 interface TimelineProps {
     books: ProcessedBook[];
