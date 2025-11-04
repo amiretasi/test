@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
   <head>
@@ -63,7 +62,7 @@
         .collapsible-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
+            transition: max-height: 0.5s ease-in-out;
         }
         
         .accordion-toggle-icon {
@@ -80,6 +79,92 @@
         .reveal-on-scroll.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* Intro Animation */
+        .intro-container {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8fafc; /* slate-50 */
+            z-index: 100;
+            transition: background-color 1s ease-in-out;
+        }
+
+        .intro-container.finished {
+            background-color: transparent;
+            pointer-events: none; /* Allow clicks to pass through to content below */
+        }
+
+        .intro-text {
+            font-size: clamp(2rem, 6vw, 5rem);
+            font-weight: 800;
+            color: #1e293b; /* slate-800 */
+            white-space: nowrap;
+            transition: all 1s ease-in-out;
+            position: absolute;
+            /* Start in the center */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: auto; /* The text itself should be interactive if needed */
+        }
+        
+        .intro-container.finished .intro-text {
+            /* End position: mimics header's h1 */
+            font-size: 1.25rem; /* h1 is text-xl */
+            font-weight: 700; /* h1 is font-bold */
+            color: #1e293b; /* h1 is text-slate-800 */
+            
+            /* Position to align with the page's container */
+            top: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 90rem; /* Corresponds to Tailwind's .container */
+            padding-right: 1rem;
+            padding-left: 1rem;
+            text-align: right;
+        }
+
+        @media (min-width: 640px) {
+             .intro-container.finished .intro-text {
+                padding-right: 1.5rem;
+                padding-left: 1.5rem;
+             }
+        }
+        
+        @media (min-width: 1024px) {
+             .intro-container.finished .intro-text {
+                padding-right: 2rem;
+                padding-left: 2rem;
+             }
+        }
+
+
+        .typing-caret {
+            font-weight: 100;
+            color: #0d9488; /* teal-600 */
+            animation: blink 0.7s infinite;
+        }
+
+        .intro-container.finished .typing-caret {
+            display: none;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* Content visibility */
+        .content-hidden {
+            opacity: 0;
+        }
+        .content-visible {
+            opacity: 1;
+            transition: opacity 0.5s ease-in;
         }
     </style>
   <script type="importmap">

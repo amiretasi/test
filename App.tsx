@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { booksData } from './constants';
 import type { ProcessedBook } from './types';
 import Header from './components/Header';
@@ -11,6 +11,7 @@ import GenreAccordionList from './components/GenreAccordionList';
 import Timeline from './components/Timeline';
 import Footer from './components/Footer';
 import ScrollButton from './components/ScrollButton';
+import Intro from './components/Intro';
 
 function parseReadDate(dateStr: string | null | undefined) {
     if (!dateStr || typeof dateStr !== 'string') {
@@ -24,6 +25,8 @@ function parseReadDate(dateStr: string | null | undefined) {
 }
 
 const App: React.FC = () => {
+    const [isIntroFinished, setIsIntroFinished] = useState(false);
+
     const processedData: ProcessedBook[] = useMemo(() => {
         return booksData.map(book => {
             const dateInfo = parseReadDate(book.readYear);
@@ -52,18 +55,21 @@ const App: React.FC = () => {
 
     return (
         <>
-            <Header />
-            <main className="container mx-auto p-4 sm:p-6 lg:p-8">
-                <PageHeader />
-                <KpiSection data={kpiData} />
-                <FullBookList books={processedData} />
-                <ChartsSection books={processedData} />
-                <AuthorAccordionList books={processedData} />
-                <GenreAccordionList books={processedData} />
-                <Timeline books={processedData} />
-            </main>
-            <Footer />
-            <ScrollButton />
+            <Intro onAnimationFinish={() => setIsIntroFinished(true)} />
+            <div className={!isIntroFinished ? 'content-hidden' : 'content-visible'}>
+                <Header />
+                <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+                    <PageHeader />
+                    <KpiSection data={kpiData} />
+                    <FullBookList books={processedData} />
+                    <ChartsSection books={processedData} />
+                    <AuthorAccordionList books={processedData} />
+                    <GenreAccordionList books={processedData} />
+                    <Timeline books={processedData} />
+                </main>
+                <Footer />
+                <ScrollButton />
+            </div>
         </>
     );
 };
