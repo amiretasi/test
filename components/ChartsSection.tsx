@@ -23,32 +23,35 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
 
     const authorData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             acc[book.author] = (acc[book.author] || 0) + 1;
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => b.count - a.count);
     }, [books]);
 
     const genreData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             acc[book.genre] = (acc[book.genre] || 0) + 1;
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => a.count - b.count);
     }, [books]);
 
     const yearlyData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             if (book.year !== 'نامشخص') {
                 acc[book.year] = (acc[book.year] || 0) + 1;
             }
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => a.name.localeCompare(b.name));

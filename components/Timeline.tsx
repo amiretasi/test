@@ -10,13 +10,14 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({ books }) => {
     const timelineData = useMemo(() => {
-        const booksByYear = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const booksByYear = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const year = book.year;
             if (year === 'نامشخص') return acc;
             if (!acc[year]) acc[year] = [];
             acc[year].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(booksByYear).sort(([yearA], [yearB]) => yearB.localeCompare(yearA));
     }, [books]);
@@ -29,13 +30,14 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
                     <div className="timeline-line"></div>
                     {timelineData.map(([year, yearBooks]) => {
                         if (year === '1404') {
-                             const booksByMonth1404 = yearBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                             const booksByMonth1404 = yearBooks.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
                                 if (book.month) {
                                     if (!acc[book.month]) acc[book.month] = [];
                                     acc[book.month].push(book);
                                 }
                                 return acc;
-                            }, {} as Record<string, ProcessedBook[]>);
+                            }, {});
 
                             const sortedMonths = Object.entries(booksByMonth1404).sort(([monthA], [monthB]) => monthB.localeCompare(monthA));
 

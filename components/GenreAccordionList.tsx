@@ -10,14 +10,15 @@ interface GenreAccordionListProps {
 
 const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
     const groupedByGenre = useMemo(() => {
-        const grouped = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const genre = book.genre || 'نامشخص';
             if (!acc[genre]) {
                 acc[genre] = [];
             }
             acc[genre].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(grouped).sort(([, booksA], [, booksB]) => {
             return booksB.length - booksA.length;
@@ -34,7 +35,8 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByGenre.map(([genre, genreBooks]) => {
-                            const booksByTitle = genreBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                            const booksByTitle = genreBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -43,7 +45,7 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
+                            }, {});
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">

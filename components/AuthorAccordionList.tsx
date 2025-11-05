@@ -10,14 +10,15 @@ interface AuthorAccordionListProps {
 
 const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
     const groupedByAuthor = useMemo(() => {
-        const grouped = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const author = book.author || 'نامشخص';
             if (!acc[author]) {
                 acc[author] = [];
             }
             acc[author].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(grouped).sort(([authorA, booksA], [authorB, booksB]) => {
             return booksB.length - booksA.length;
@@ -34,7 +35,8 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByAuthor.map(([author, authorBooks]) => {
-                            const booksByTitle = authorBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                            const booksByTitle = authorBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -43,7 +45,7 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
+                            }, {});
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">

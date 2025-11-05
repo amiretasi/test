@@ -155,7 +155,8 @@ export const booksData: Book[] = [
     { id: 111, title: 'دوبیتی‌های باباطاهر', author: 'باباطاهر', originalPubDate: 'قرن ۵', readYear: '1376', genre: 'شعر', translator: 'تألیفی', nationality: 'ایران' },
     { id: 112, title: 'دیوان پروین اعتصامی', author: 'پروین اعتصامی', originalPubDate: '۱۳۱۴', readYear: '1381', genre: 'شعر', translator: 'تألیفی', nationality: 'ایران' },
     { id: 113, title: 'دیوان اشعار وحشی بافقی', author: 'وحشی بافقی', originalPubDate: 'قرن ۱۰', readYear: '1380', genre: 'شعر', translator: 'تألیفی', nationality: 'ایران' },
-    { id: 114, title: 'سیمای دو زن', author: 'علی اکبر سعیدی سیرجانی', originalPubDate: '1369', readYear: '1404/08/13', genre: 'جامعه شناسی', translator: 'تألیفی', nationality: 'ایران' }
+    { id: 114, title: 'سیمای دو زن', author: 'علی اکبر سعیدی سیرجانی', originalPubDate: '1369', readYear: '1404/08/13', genre: 'جامعه شناسی', translator: 'تألیفی', nationality: 'ایران' },
+    { id: 115, title: 'ای کوته آستینان', author: 'علی اکبر سعیدی سیرجانی', originalPubDate: '1370', readYear: '1404/08/14', genre: 'جامعه شناسی', translator: 'تألیفی', nationality: 'ایران' }
 ];
 
 export const JALALI_MONTHS = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
@@ -251,14 +252,15 @@ interface AuthorAccordionListProps {
 
 const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
     const groupedByAuthor = useMemo(() => {
-        const grouped = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const author = book.author || 'نامشخص';
             if (!acc[author]) {
                 acc[author] = [];
             }
             acc[author].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(grouped).sort(([authorA, booksA], [authorB, booksB]) => {
             return booksB.length - booksA.length;
@@ -275,7 +277,8 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByAuthor.map(([author, authorBooks]) => {
-                            const booksByTitle = authorBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                            const booksByTitle = authorBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -284,7 +287,7 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
+                            }, {});
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">
@@ -345,32 +348,35 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
 
     const authorData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             acc[book.author] = (acc[book.author] || 0) + 1;
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => b.count - a.count);
     }, [books]);
 
     const genreData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             acc[book.genre] = (acc[book.genre] || 0) + 1;
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => a.count - b.count);
     }, [books]);
 
     const yearlyData = useMemo(() => {
-        const counts = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const counts = books.reduce<Record<string, number>>((acc, book) => {
             if (book.year !== 'نامشخص') {
                 acc[book.year] = (acc[book.year] || 0) + 1;
             }
             return acc;
-        }, {} as Record<string, number>);
+        }, {});
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => a.name.localeCompare(b.name));
@@ -505,14 +511,15 @@ interface GenreAccordionListProps {
 
 const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
     const groupedByGenre = useMemo(() => {
-        const grouped = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const genre = book.genre || 'نامشخص';
             if (!acc[genre]) {
                 acc[genre] = [];
             }
             acc[genre].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(grouped).sort(([, booksA], [, booksB]) => {
             return booksB.length - booksA.length;
@@ -529,7 +536,8 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByGenre.map(([genre, genreBooks]) => {
-                            const booksByTitle = genreBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                            const booksByTitle = genreBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -538,7 +546,7 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
+                            }, {});
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">
@@ -789,13 +797,14 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({ books }) => {
     const timelineData = useMemo(() => {
-        const booksByYear = books.reduce((acc, book) => {
+        // FIX: Use generic on reduce to properly type the accumulator
+        const booksByYear = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
             const year = book.year;
             if (year === 'نامشخص') return acc;
             if (!acc[year]) acc[year] = [];
             acc[year].push(book);
             return acc;
-        }, {} as Record<string, ProcessedBook[]>);
+        }, {});
 
         return Object.entries(booksByYear).sort(([yearA], [yearB]) => yearB.localeCompare(yearA));
     }, [books]);
@@ -808,13 +817,14 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
                     <div className="timeline-line"></div>
                     {timelineData.map(([year, yearBooks]) => {
                         if (year === '1404') {
-                             const booksByMonth1404 = yearBooks.reduce((acc, book) => {
+                            // FIX: Use generic on reduce to properly type the accumulator
+                             const booksByMonth1404 = yearBooks.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
                                 if (book.month) {
                                     if (!acc[book.month]) acc[book.month] = [];
                                     acc[book.month].push(book);
                                 }
                                 return acc;
-                            }, {} as Record<string, ProcessedBook[]>);
+                            }, {});
 
                             const sortedMonths = Object.entries(booksByMonth1404).sort(([monthA], [monthB]) => monthB.localeCompare(monthA));
 
