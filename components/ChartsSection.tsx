@@ -23,8 +23,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
 
     const authorData = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const counts = books.reduce<Record<string, number>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const counts = books.reduce((acc: Record<string, number>, book) => {
             acc[book.author] = (acc[book.author] || 0) + 1;
             return acc;
         }, {});
@@ -34,8 +34,8 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
     }, [books]);
 
     const genreData = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const counts = books.reduce<Record<string, number>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const counts = books.reduce((acc: Record<string, number>, book) => {
             acc[book.genre] = (acc[book.genre] || 0) + 1;
             return acc;
         }, {});
@@ -45,8 +45,8 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
     }, [books]);
 
     const yearlyData = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const counts = books.reduce<Record<string, number>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const counts = books.reduce((acc: Record<string, number>, book) => {
             if (book.year !== 'نامشخص') {
                 acc[book.year] = (acc[book.year] || 0) + 1;
             }

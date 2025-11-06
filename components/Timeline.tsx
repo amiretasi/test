@@ -10,8 +10,8 @@ interface TimelineProps {
 
 const Timeline: React.FC<TimelineProps> = ({ books }) => {
     const timelineData = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const booksByYear = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const booksByYear = books.reduce((acc: Record<string, ProcessedBook[]>, book) => {
             const year = book.year;
             if (year === 'نامشخص') return acc;
             if (!acc[year]) acc[year] = [];
@@ -30,8 +30,8 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
                     <div className="timeline-line"></div>
                     {timelineData.map(([year, yearBooks]) => {
                         if (year === '1404') {
-                            // FIX: Use generic on reduce to properly type the accumulator
-                             const booksByMonth1404 = yearBooks.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
+                            // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+                             const booksByMonth1404 = yearBooks.reduce((acc: Record<string, ProcessedBook[]>, book) => {
                                 if (book.month) {
                                     if (!acc[book.month]) acc[book.month] = [];
                                     acc[book.month].push(book);

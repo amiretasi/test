@@ -10,8 +10,8 @@ interface AuthorAccordionListProps {
 
 const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
     const groupedByAuthor = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const grouped = books.reduce((acc: Record<string, ProcessedBook[]>, book) => {
             const author = book.author || 'نامشخص';
             if (!acc[author]) {
                 acc[author] = [];
@@ -35,8 +35,8 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByAuthor.map(([author, authorBooks]) => {
-                            // FIX: Use generic on reduce to properly type the accumulator
-                            const booksByTitle = authorBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
+                            // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+                            const booksByTitle = authorBooks.reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,

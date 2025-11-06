@@ -10,8 +10,8 @@ interface GenreAccordionListProps {
 
 const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
     const groupedByGenre = useMemo(() => {
-        // FIX: Use generic on reduce to properly type the accumulator
-        const grouped = books.reduce<Record<string, ProcessedBook[]>>((acc, book) => {
+        // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+        const grouped = books.reduce((acc: Record<string, ProcessedBook[]>, book) => {
             const genre = book.genre || 'نامشخص';
             if (!acc[genre]) {
                 acc[genre] = [];
@@ -35,8 +35,8 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                 >
                     <div className="space-y-4 mt-8">
                         {groupedByGenre.map(([genre, genreBooks]) => {
-                            // FIX: Use generic on reduce to properly type the accumulator
-                            const booksByTitle = genreBooks.reduce<Record<string, { book: ProcessedBook; readYears: string[] }>>((acc, book) => {
+                            // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
+                            const booksByTitle = genreBooks.reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
