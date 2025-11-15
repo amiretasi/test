@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import type { ProcessedBook } from '../types.ts';
@@ -27,10 +26,12 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
         const counts = books.reduce((acc: Record<string, number>, book) => {
             acc[book.author] = (acc[book.author] || 0) + 1;
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, number>);
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => b.count - a.count);
+            // FIX: Cast count to number to allow arithmetic operation.
+            .sort((a, b) => (b.count as number) - (a.count as number));
     }, [books]);
 
     const genreData = useMemo(() => {
@@ -38,10 +39,12 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
         const counts = books.reduce((acc: Record<string, number>, book) => {
             acc[book.genre] = (acc[book.genre] || 0) + 1;
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, number>);
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
-            .sort((a, b) => a.count - b.count);
+            // FIX: Cast count to number to allow arithmetic operation.
+            .sort((a, b) => (a.count as number) - (b.count as number));
     }, [books]);
 
     const yearlyData = useMemo(() => {
@@ -51,7 +54,8 @@ const ChartsSection: React.FC<ChartsSectionProps> = ({ books }) => {
                 acc[book.year] = (acc[book.year] || 0) + 1;
             }
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, number>);
         return Object.entries(counts)
             .map(([name, count]) => ({ name, count }))
             .sort((a, b) => a.name.localeCompare(b.name));

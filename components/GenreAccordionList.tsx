@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import type { ProcessedBook } from '../types.ts';
 import Accordion from './Accordion.tsx';
@@ -18,11 +17,11 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
             }
             acc[genre].push(book);
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, ProcessedBook[]>);
 
-        return Object.entries(grouped).sort(([, booksA], [, booksB]) => {
-            return booksB.length - booksA.length;
-        });
+        // FIX: Cast array values to fix type inference error on `length` property.
+        return Object.entries(grouped).sort((a, b) => (b[1] as ProcessedBook[]).length - (a[1] as ProcessedBook[]).length);
     }, [books]);
 
     return (
@@ -36,7 +35,7 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                     <div className="space-y-4 mt-8">
                         {groupedByGenre.map(([genre, genreBooks]) => {
                             // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
-                            const booksByTitle = genreBooks.reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
+                            const booksByTitle = (genreBooks as ProcessedBook[]).reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -45,13 +44,14 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">
                                     {genre}
                                     <span className="text-sm font-medium text-slate-600 mr-2">
-                                        ({Object.keys(booksByTitle).length} کتاب / {genreBooks.length} بار خوانش)
+                                        ({Object.keys(booksByTitle).length} کتاب / {(genreBooks as ProcessedBook[]).length} بار خوانش)
                                     </span>
                                 </h3>
                             );
@@ -60,7 +60,8 @@ const GenreAccordionList: React.FC<GenreAccordionListProps> = ({ books }) => {
                                 <Accordion key={genre} title={title}>
                                     <ul className="space-y-1 p-4">
                                         {Object.values(booksByTitle)
-                                            .sort((a, b) => {
+                                            // FIX: Explicitly typed sort parameters to fix error on accessing readYears.
+                                            .sort((a: { readYears: string[] }, b: { readYears: string[] }) => {
                                                 // Sort read years for each book title to find the latest one
                                                 const latestYearA = [...a.readYears].sort((y1, y2) => y2.localeCompare(y1))[0];
                                                 const latestYearB = [...b.readYears].sort((y1, y2) => y2.localeCompare(y1))[0];

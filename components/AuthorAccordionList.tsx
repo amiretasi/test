@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import type { ProcessedBook } from '../types.ts';
 import Accordion from './Accordion.tsx';
@@ -18,11 +17,11 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
             }
             acc[author].push(book);
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, ProcessedBook[]>);
 
-        return Object.entries(grouped).sort(([authorA, booksA], [authorB, booksB]) => {
-            return booksB.length - booksA.length;
-        });
+        // FIX: Cast array values to fix type inference error on `length` property.
+        return Object.entries(grouped).sort((a, b) => (b[1] as ProcessedBook[]).length - (a[1] as ProcessedBook[]).length);
     }, [books]);
 
     return (
@@ -36,7 +35,7 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                     <div className="space-y-4 mt-8">
                         {groupedByAuthor.map(([author, authorBooks]) => {
                             // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
-                            const booksByTitle = authorBooks.reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
+                            const booksByTitle = (authorBooks as ProcessedBook[]).reduce((acc: Record<string, { book: ProcessedBook; readYears: string[] }>, book) => {
                                 if (!acc[book.title]) {
                                     acc[book.title] = {
                                         book: book,
@@ -45,13 +44,14 @@ const AuthorAccordionList: React.FC<AuthorAccordionListProps> = ({ books }) => {
                                 }
                                 acc[book.title].readYears.push(book.readYear);
                                 return acc;
-                            }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+                            }, {} as Record<string, { book: ProcessedBook; readYears: string[] }>);
 
                             const title = (
                                 <h3 className="font-bold text-lg text-slate-800">
                                     {author}
                                     <span className="text-sm font-medium text-slate-600 mr-2">
-                                        ({Object.keys(booksByTitle).length} کتاب / {authorBooks.length} بار خوانش)
+                                        ({Object.keys(booksByTitle).length} کتاب / {(authorBooks as ProcessedBook[]).length} بار خوانش)
                                     </span>
                                 </h3>
                             );

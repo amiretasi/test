@@ -1,4 +1,3 @@
-
 import React, { useMemo } from 'react';
 import type { ProcessedBook } from '../types.ts';
 import { JALALI_MONTHS } from '../constants.ts';
@@ -17,7 +16,8 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
             if (!acc[year]) acc[year] = [];
             acc[year].push(book);
             return acc;
-        }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+        }, {} as Record<string, ProcessedBook[]>);
 
         return Object.entries(booksByYear).sort(([yearA], [yearB]) => yearB.localeCompare(yearA));
     }, [books]);
@@ -31,15 +31,17 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
                     {timelineData.map(([year, yearBooks]) => {
                         if (year === '1404') {
                             // FIX: Explicitly typed the accumulator for `reduce` to prevent type inference errors.
-                             const booksByMonth1404 = yearBooks.reduce((acc: Record<string, ProcessedBook[]>, book) => {
+                             const booksByMonth1404 = (yearBooks as ProcessedBook[]).reduce((acc: Record<string, ProcessedBook[]>, book) => {
                                 if (book.month) {
                                     if (!acc[book.month]) acc[book.month] = [];
                                     acc[book.month].push(book);
                                 }
                                 return acc;
-                            }, {});
+// FIX: Cast initial value of reduce to fix type inference error.
+                            }, {} as Record<string, ProcessedBook[]>);
 
-                            const sortedMonths = Object.entries(booksByMonth1404).sort(([monthA], [monthB]) => monthB.localeCompare(monthA));
+                            // FIX: Explicitly type `sortedMonths` to fix type inference issues.
+                            const sortedMonths: [string, ProcessedBook[]][] = Object.entries(booksByMonth1404).sort((a, b) => b[0].localeCompare(a[0]));
 
                             return sortedMonths.map(([month, monthBooks]) => {
                                 const monthName = JALALI_MONTHS[parseInt(month, 10) - 1];
@@ -63,7 +65,7 @@ const Timeline: React.FC<TimelineProps> = ({ books }) => {
                                 <div className="timeline-dot"></div>
                                 <h3 className="font-bold text-lg text-slate-800">سال {year}</h3>
                                 <ul className="mt-3 space-y-2">
-                                    {yearBooks.map((book, index) => {
+                                    {(yearBooks as ProcessedBook[]).map((book, index) => {
                                        const translatorText = book.translator && !['تألیفی', 'تصحیح شفیعی کدکنی', 'تصحیح قزوینی', 'تصحیح نیکلسون', 'تصحیح فروزانفر', 'تصحیح موحد', 'تصحیح وحید دستگردی', 'تصحیح هانری کربن', 'تصحیح فروغی'].includes(book.translator) ? ` - ${book.translator}` : '';
                                         return <li key={`${book.id}-${index}`} className="text-slate-700"><strong>{book.title}</strong> - {book.author}{translatorText} <span className="text-xs text-slate-500">({book.readYear})</span></li>
                                     })}
